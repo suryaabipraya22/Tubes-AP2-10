@@ -23,7 +23,7 @@ func main() {
 
     // Data dummy awal
     expenses = []Expense{
-        {"Transportasi", 800000, "Tiket kereta Bandung-Jakarta"},
+        {"Transportasi umum", 800000, "Tiket kereta Bandung-Jakarta"},
         {"Makanan", 150000, "Makan 3x sehari"},
         {"Akomodasi", 1200000, "Hotel 3 malam"},
         {"Oleh-oleh", 250000, "Belanja oleh-oleh"},
