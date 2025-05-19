@@ -21,16 +21,16 @@ var plannedBudget float64
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-    // Data dummy awal
-    expenses = []Expense{
-        {"Transportasi", 800000, "Tiket kereta Bandung-Jakarta"},
-        {"Makanan", 150000, "Makan 3x sehari"},
-        {"Akomodasi", 1200000, "Hotel 3 malam"},
-        {"Oleh-oleh", 250000, "Belanja oleh-oleh"},
-        {"Transportasi", 50000, "Ojek ke hotel"},
-        {"Makanan", 100000, "Makan malam"},
-        {"Wisata", 200000, "Tiket masuk tempat wisata"},
-    }
+	// Data dummy awal
+	expenses = []Expense{
+		{"Transportasi", 800000, "Tiket kereta Bandung-Jakarta"},
+		{"Makanan", 150000, "Makan 3x sehari"},
+		{"Akomodasi", 1200000, "Hotel 3 malam"},
+		{"Oleh-oleh", 250000, "Belanja oleh-oleh"},
+		{"Transportasi", 50000, "Ojek ke hotel"},
+		{"Makanan", 100000, "Makan malam"},
+		{"Wisata", 200000, "Tiket masuk tempat wisata"},
+	}
 
 	plannedBudget = 3000000
 
