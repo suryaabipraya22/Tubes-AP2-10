@@ -33,7 +33,7 @@ func main() {
 }
 
 func tampilkanMenu() {
-	fmt.Println("=== MENU DATA ===")
+	fmt.Println("==== MENU DATA ====")
 	fmt.Println("1. Tambah Data")
 	fmt.Println("2. Ubah Data")
 	fmt.Println("3. Hapus Data")
