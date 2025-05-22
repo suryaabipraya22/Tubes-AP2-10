@@ -221,5 +221,5 @@ func tampilkanLaporan() {
 	}
 	fmt.Printf("Total Pengeluaran: %.2f\n", total)
 	fmt.Printf("Budget: %.2f\n", budget)
-	fmt.Printf("Selisih Budget dan Pengeluaran: %.2f\n", math.Abs(budget-total))
+	fmt.Printf("Selisih Budget dan Pengeluaran: %.2f\n ", math.Abs(budget-total))
 }
