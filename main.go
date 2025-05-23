@@ -127,7 +127,7 @@ func ubahData() {
 		fmt.Scanln(&data[index].jumlah)
 		fmt.Println("Data berhasil diubah.")
 	} else {
-		fmt.Println("Indeks tidak valid.")
+		fmt.Println("Indeks tidak valid")
 	}
 }
 
