@@ -1,71 +1,52 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"sort"
-	"strconv"
-	"strings"
+	"math"
 )
 
-type Expense struct {
-	Category string
-	Amount   float64
-	Note     string
+const NMAX = 100 // Maksimum jumlah data pengeluaran yang bisa disimpan
+
+// Struktur data pengeluaran
+type Pengeluaran struct {
+	kategori string
+	jumlah   float64
 }
 
-var expenses []Expense
-var plannedBudget float64
+var data [NMAX]Pengeluaran // Array untuk menyimpan data pengeluaran
+var count int              // Jumlah data yang sedang tersimpan
+var budget float64         // Budget total yang direncanakan
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+	var pilihan int
 
-    // Data dummy awal
-    expenses = []Expense{
-        {"Transportasi", 800000, "Tiket kereta Bandung-Jakarta"},
-        {"Makanan", 150000, "Makan 3x sehari"},
-        {"Akomodasi", 1200000, "Hotel 3 malam"},
-        {"Oleh-oleh", 250000, "Belanja oleh-oleh"},
-        {"Transportasi", 50000, "Ojek ke hotel"},
-        {"Makanan", 100000, "Makan malam"},
-        {"Wisata", 200000, "Tiket masuk tempat wisata"},
-    }
-
-	plannedBudget = 3000000
+	// Input budget awal dari pengguna
+	fmt.Print("Masukkan total budget perjalanan Anda: ")
+	fmt.Scanln(&budget)
 
 	for {
-		fmt.Println("\n=== Menu Pengelola Budget Travelling ===")
-		fmt.Println("1. Tambah Pengeluaran")
-		fmt.Println("2. Tampilkan Semua Pengeluaran")
-		fmt.Println("3. Ubah Pengeluaran")
-		fmt.Println("4. Hapus Pengeluaran")
-		fmt.Println("5. Pencarian Pengeluaran (Kategori)")
-		fmt.Println("6. Urutkan Pengeluaran")
-		fmt.Println("7. Tampilkan Laporan")
-		fmt.Println("0. Keluar")
-		fmt.Print("Pilih menu: ")
+		tampilkanMenu()
+		fmt.Scanln(&pilihan)
 
-		scanner.Scan()
-		choice := scanner.Text()
-
-		switch choice {
-		case "1":
-			addExpenseCLI(scanner)
-		case "2":
-			displayExpenses()
-		case "3":
-			updateExpenseCLI(scanner)
-		case "4":
-			deleteExpenseCLI(scanner)
-		case "5":
-			searchExpenseCLI(scanner)
-		case "6":
-			sortExpensesCLI(scanner)
-		case "7":
-			printReport()
-		case "0":
-			fmt.Println("Sampai jumpa!")
+		switch pilihan {
+		case 1:
+			tambahData()
+		case 2:
+			ubahData()
+		case 3:
+			hapusData()
+		case 4:
+			tampilkanData()
+		case 5:
+			hitungTotalDanSaran()
+		case 6:
+			cariDataKategori()
+		case 7:
+			urutkanData()
+		case 8:
+			tampilkanLaporan()
+		case 9:
+			fmt.Println("Terima kasih telah menggunakan aplikasi!")
 			return
 		default:
 			fmt.Println("Pilihan tidak valid.")
@@ -73,192 +54,172 @@ func main() {
 	}
 }
 
-func addExpenseCLI(scanner *bufio.Scanner) {
-	fmt.Print("Kategori: ")
-	scanner.Scan()
-	category := scanner.Text()
-
-	fmt.Print("Jumlah (Rp): ")
-	scanner.Scan()
-	amount, _ := strconv.ParseFloat(scanner.Text(), 64)
-
-	fmt.Print("Catatan: ")
-	scanner.Scan()
-	note := scanner.Text()
-
-	expenses = append(expenses, Expense{category, amount, note})
-	fmt.Println("✅ Pengeluaran berhasil ditambahkan.")
+// Menampilkan menu utama
+func tampilkanMenu() {
+	fmt.Println("\n=== MENU PENGELOLAAN BUDGET TRAVELING ===")
+	fmt.Println("1. Tambah Pengeluaran")
+	fmt.Println("2. Ubah Pengeluaran")
+	fmt.Println("3. Hapus Pengeluaran")
+	fmt.Println("4. Tampilkan Seluruh Pengeluaran")
+	fmt.Println("5. Hitung Total & Saran Penghematan")
+	fmt.Println("6. Cari Pengeluaran (Sequential Search)")
+	fmt.Println("7. Urutkan Pengeluaran")
+	fmt.Println("8. Tampilkan Laporan")
+	fmt.Println("9. Keluar")
+	fmt.Print("Pilih menu: ")
 }
 
-func updateExpenseCLI(scanner *bufio.Scanner) {
-	displayExpenses()
-	fmt.Print("Pilih nomor pengeluaran yang ingin diubah: ")
-	scanner.Scan()
-	index, _ := strconv.Atoi(scanner.Text())
+// Menambahkan pengeluaran baru
+func tambahData() {
+	if count < NMAX {
+		var kat string
+		var jml float64
+		fmt.Print("Masukkan kategori pengeluaran: ")
+		fmt.Scanln(&kat)
+		fmt.Print("Masukkan jumlah pengeluaran: ")
+		fmt.Scanln(&jml)
 
-	if index < 0 || index >= len(expenses) {
-		fmt.Println("❌ Index tidak valid.")
-		return
+		data[count] = Pengeluaran{kat, jml}
+		count++
+		fmt.Println("Data berhasil ditambahkan.")
+	} else {
+		fmt.Println("Data penuh. Tidak bisa menambah lagi.")
 	}
-
-	fmt.Print("Kategori baru: ")
-	scanner.Scan()
-	category := scanner.Text()
-
-	fmt.Print("Jumlah baru (Rp): ")
-	scanner.Scan()
-	amount, _ := strconv.ParseFloat(scanner.Text(), 64)
-
-	fmt.Print("Catatan baru: ")
-	scanner.Scan()
-	note := scanner.Text()
-
-	expenses[index] = Expense{category, amount, note}
-	fmt.Println("✅ Data berhasil diubah.")
 }
 
-func deleteExpenseCLI(scanner *bufio.Scanner) {
-	displayExpenses()
-	fmt.Print("Pilih nomor pengeluaran yang ingin dihapus: ")
-	scanner.Scan()
-	index, _ := strconv.Atoi(scanner.Text())
+// Mengubah data pengeluaran berdasarkan indeks
+func ubahData() {
+	var index int
+	fmt.Print("Masukkan indeks pengeluaran yang ingin diubah: ")
+	fmt.Scanln(&index)
 
-	if index < 0 || index >= len(expenses) {
-		fmt.Println("❌ Index tidak valid.")
-		return
+	if index >= 0 && index < count {
+		fmt.Print("Masukkan kategori baru: ")
+		fmt.Scanln(&data[index].kategori)
+		fmt.Print("Masukkan jumlah baru: ")
+		fmt.Scanln(&data[index].jumlah)
+		fmt.Println("Data berhasil diubah.")
+	} else {
+		fmt.Println("Indeks tidak valid.")
 	}
-
-	expenses = append(expenses[:index], expenses[index+1:]...)
-	fmt.Println("✅ Data berhasil dihapus.")
 }
 
-func searchExpenseCLI(scanner *bufio.Scanner) {
-	fmt.Print("Masukkan kategori untuk dicari: ")
-	scanner.Scan()
-	category := scanner.Text()
+// Menghapus data pengeluaran dengan menggeser array
+func hapusData() {
+	var index int
+	fmt.Print("Masukkan indeks pengeluaran yang ingin dihapus: ")
+	fmt.Scanln(&index)
 
-	fmt.Println("🔍 Hasil Sequential Search:")
-	for i, e := range expenses {
-		if strings.EqualFold(e.Category, category) {
-			fmt.Printf("[%d] %s: Rp%.2f - %s\n", i, e.Category, e.Amount, e.Note)
+	if index >= 0 && index < count {
+		for i := index; i < count-1; i++ {
+			data[i] = data[i+1]
+		}
+		count--
+		fmt.Println("Data berhasil dihapus.")
+	} else {
+		fmt.Println("Indeks tidak valid.")
+	}
+}
+
+// Menampilkan seluruh pengeluaran yang telah ditambahkan
+func tampilkanData() {
+	if count == 0 {
+		fmt.Println("Belum ada data pengeluaran.")
+	} else {
+		fmt.Println("Daftar Pengeluaran:")
+		for i := 0; i < count; i++ {
+			fmt.Printf("%d. %s - %.2f\n", i, data[i].kategori, data[i].jumlah)
 		}
 	}
-
-	// Binary Search - harus diurutkan dulu berdasarkan kategori
-	sort.Slice(expenses, func(i, j int) bool {
-		return expenses[i].Category < expenses[j].Category
-	})
-
-	fmt.Println("🔎 Hasil Binary Search:")
-	idx := binarySearchByCategory(expenses, category)
-	if idx != -1 {
-		e := expenses[idx]
-		fmt.Printf("[%d] %s: Rp%.2f - %s\n", idx, e.Category, e.Amount, e.Note)
-	} else {
-		fmt.Println("Tidak ditemukan.")
-	}
 }
 
-func sortExpensesCLI(scanner *bufio.Scanner) {
-	fmt.Println("Urut berdasarkan:")
-	fmt.Println("1. Jumlah (Selection Sort)")
-	fmt.Println("2. Kategori (Insertion Sort)")
-	fmt.Print("Pilih: ")
-
-	scanner.Scan()
-	pilihan := scanner.Text()
-
-	switch pilihan {
-	case "1":
-		selectionSortByAmount(expenses)
-		fmt.Println("✅ Diurutkan berdasarkan jumlah.")
-	case "2":
-		insertionSortByCategory(expenses)
-		fmt.Println("✅ Diurutkan berdasarkan kategori.")
-	default:
-		fmt.Println("❌ Pilihan tidak valid.")
-	}
-
-	displayExpenses()
-}
-
-func printReport() {
-	categoryMap := map[string]float64{}
-	for _, e := range expenses {
-		categoryMap[e.Category] += e.Amount
-	}
-
-	fmt.Println("\n📋 Laporan Pengeluaran per Kategori:")
-	for cat, amt := range categoryMap {
-		fmt.Printf("- %s: Rp%.2f\n", cat, amt)
-	}
-
-	total := totalExpense()
-	fmt.Printf("\n🎯 Total Pengeluaran: Rp%.2f dari Anggaran Rp%.2f\n", total, plannedBudget)
-	fmt.Printf("💰 Selisih: Rp%.2f\n", plannedBudget-total)
-
-	suggestSaving()
-}
-
-func displayExpenses() {
-	fmt.Println("\n📦 Daftar Pengeluaran:")
-	for i, e := range expenses {
-		fmt.Printf("[%d] %s - Rp%.2f (%s)\n", i, e.Category, e.Amount, e.Note)
-	}
-}
-
-func totalExpense() float64 {
+// Menghitung total pengeluaran dan menampilkan saran penghematan
+func hitungTotalDanSaran() {
 	total := 0.0
-	for _, e := range expenses {
-		total += e.Amount
+	for i := 0; i < count; i++ {
+		total += data[i].jumlah
 	}
-	return total
-}
 
-func suggestSaving() {
-	selisih := plannedBudget - totalExpense()
-	if selisih < 0 {
-		fmt.Printf("⚠ Anda melebihi anggaran sebesar Rp%.2f\n", -selisih)
+	fmt.Printf("Total pengeluaran: %.2f\n", total)
+	if total > budget {
+		fmt.Printf("Anda melebihi budget sebesar %.2f. Kurangi pengeluaran Anda!\n", total-budget)
 	} else {
-		fmt.Printf("✅ Anda masih hemat sebesar Rp%.2f\n", selisih)
+		fmt.Printf("Masih ada sisa budget: %.2f. Anda cukup hemat!\n", budget-total)
 	}
 }
 
-func selectionSortByAmount(exp []Expense) {
-	for i := 0; i < len(exp)-1; i++ {
-		minIdx := i
-		for j := i + 1; j < len(exp); j++ {
-			if exp[j].Amount < exp[minIdx].Amount {
-				minIdx = j
+// Mencari pengeluaran berdasarkan kategori dengan Sequential Search
+func cariDataKategori() {
+	var kat string
+	fmt.Print("Masukkan kategori yang ingin dicari: ")
+	fmt.Scanln(&kat)
+	found := false
+
+	for i := 0; i < count; i++ {
+		if data[i].kategori == kat {
+			fmt.Printf("Ditemukan di indeks %d: %s - %.2f\n", i, data[i].kategori, data[i].jumlah)
+			found = true
+		}
+	}
+
+	if !found {
+		fmt.Println("Data tidak ditemukan.")
+	}
+}
+
+// Mengurutkan data pengeluaran dengan Selection dan Insertion Sort
+func urutkanData() {
+	var pilihan int
+	fmt.Println("Pilih metode pengurutan:")
+	fmt.Println("1. Selection Sort berdasarkan jumlah")
+	fmt.Println("2. Insertion Sort berdasarkan kategori")
+	fmt.Print("Pilihan: ")
+	fmt.Scanln(&pilihan)
+
+	if pilihan == 1 {
+		// Selection Sort by jumlah
+		for i := 0; i < count-1; i++ {
+			min := i
+			for j := i + 1; j < count; j++ {
+				if data[j].jumlah < data[min].jumlah {
+					min = j
+				}
 			}
+			data[i], data[min] = data[min], data[i]
 		}
-		exp[i], exp[minIdx] = exp[minIdx], exp[i]
+		fmt.Println("Data diurutkan berdasarkan jumlah (Selection Sort).")
+	} else if pilihan == 2 {
+		// Insertion Sort by kategori
+		for i := 1; i < count; i++ {
+			temp := data[i]
+			j := i - 1
+			for j >= 0 && data[j].kategori > temp.kategori {
+				data[j+1] = data[j]
+				j--
+			}
+			data[j+1] = temp
+		}
+		fmt.Println("Data diurutkan berdasarkan kategori (Insertion Sort).")
+	} else {
+		fmt.Println("Pilihan tidak valid.")
 	}
 }
 
-func insertionSortByCategory(exp []Expense) {
-	for i := 1; i < len(exp); i++ {
-		key := exp[i]
-		j := i - 1
-		for j >= 0 && exp[j].Category > key.Category {
-			exp[j+1] = exp[j]
-			j--
-		}
-		exp[j+1] = key
+// Menampilkan laporan: daftar, total, dan selisih dengan budget
+func tampilkanLaporan() {
+	if count == 0 {
+		fmt.Println("Tidak ada data pengeluaran.")
+		return
 	}
-}
 
-func binarySearchByCategory(sorted []Expense, target string) int {
-	low, high := 0, len(sorted)-1
-	for low <= high {
-		mid := (low + high) / 2
-		if strings.EqualFold(sorted[mid].Category, target) {
-			return mid
-		} else if sorted[mid].Category < target {
-			low = mid + 1
-		} else {
-			high = mid - 1
-		}
+	fmt.Println("=== LAPORAN PENGELUARAN ===")
+	tampilkanData()
+
+	total := 0.0
+	for i := 0; i < count; i++ {
+		total += data[i].jumlah
 	}
-	return -1
+	fmt.Printf("Total Pengeluaran: %.2f\n", total)
+	fmt.Printf("Budget: %.2f\n", budget)
+	fmt.Printf("Selisih Budget dan Pengeluaran: %.2f\n ", math.Abs(budget-total))
 }
