@@ -46,7 +46,7 @@ func main() {
 		case 8:
 			tampilkanLaporan()
 		case 9:
-			fmt.Println("Terima kasih telah menggunakan aplikasi!")
+			fmt.Println("Terima kasih telah menggunakan aplikasi kami!")
 			return
 		default:
 			fmt.Println("Pilihan tidak valid.")
@@ -72,10 +72,37 @@ func tampilkanMenu() {
 // Menambahkan pengeluaran baru
 func tambahData() {
 	if count < NMAX {
-		var kat string
+		var pilihan int
 		var jml float64
-		fmt.Print("Masukkan kategori pengeluaran: ")
-		fmt.Scanln(&kat)
+		var kat string
+
+		// While loop: ulangi selama pilihan tidak di antara 1-4
+		for pilihan < 1 || pilihan > 4 {
+			fmt.Println("Pilih kategori pengeluaran:")
+			fmt.Println("1. Transportasi")
+			fmt.Println("2. Akomodasi")
+			fmt.Println("3. Makanan")
+			fmt.Println("4. Hiburan")
+			fmt.Print("Pilihan (1-4): ")
+			fmt.Scanln(&pilihan)
+
+			if pilihan < 1 || pilihan > 4 {
+				fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
+			}
+		}
+
+		// Tetapkan kategori setelah input valid
+		switch pilihan {
+		case 1:
+			kat = "Transportasi"
+		case 2:
+			kat = "Akomodasi"
+		case 3:
+			kat = "Makanan"
+		case 4:
+			kat = "Hiburan"
+		}
+
 		fmt.Print("Masukkan jumlah pengeluaran: ")
 		fmt.Scanln(&jml)
 
