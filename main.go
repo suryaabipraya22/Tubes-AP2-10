@@ -56,17 +56,20 @@ func main() {
 
 // Menampilkan menu utama
 func tampilkanMenu() {
-	fmt.Println("\n=== MENU PENGELOLAAN BUDGET TRAVELING ===")
-	fmt.Println("1. Tambah Pengeluaran")
-	fmt.Println("2. Ubah Pengeluaran")
-	fmt.Println("3. Hapus Pengeluaran")
-	fmt.Println("4. Tampilkan Seluruh Pengeluaran")
-	fmt.Println("5. Hitung Total & Saran Penghematan")
-	fmt.Println("6. Cari Pengeluaran (Sequential Search)")
-	fmt.Println("7. Urutkan Pengeluaran")
-	fmt.Println("8. Tampilkan Laporan")
-	fmt.Println("9. Keluar")
-	fmt.Print("Pilih menu: ")
+	fmt.Println("╔════════════════════════════════════════════════╗")
+	fmt.Println("║              MENU PENGELOLAAN BUDGET           ║")
+	fmt.Println("╠════════════════════════════════════════════════╣")
+	fmt.Println("║ 1. Tambah Pengeluaran                          ║")
+	fmt.Println("║ 2. Ubah Pengeluaran                            ║")
+	fmt.Println("║ 3. Hapus Pengeluaran                           ║")
+	fmt.Println("║ 4. Tampilkan Seluruh Pengeluaran               ║")
+	fmt.Println("║ 5. Hitung Total & Saran Penghematan            ║")
+	fmt.Println("║ 6. Cari Pengeluaran (Sequential Search)        ║")
+	fmt.Println("║ 7. Urutkan Pengeluaran                         ║")
+	fmt.Println("║ 8. Tampilkan Laporan                           ║")
+	fmt.Println("║ 9. Keluar                                      ║")
+	fmt.Println("╚════════════════════════════════════════════════╝")
+	fmt.Print("▶ Pilih menu: ")
 }
 
 // Menambahkan pengeluaran baru
@@ -76,17 +79,19 @@ func tambahData() {
 		var jml float64
 		var kat string
 
-		// While loop: ulangi selama pilihan tidak di antara 1-4
-		for pilihan < 1 || pilihan > 4 {
+		// While loop: ulangi selama pilihan tidak di antara 1-5
+		for pilihan < 1 || pilihan > 5 {
 			fmt.Println("Pilih kategori pengeluaran:")
 			fmt.Println("1. Transportasi")
-			fmt.Println("2. Akomodasi")
+			fmt.Println("2. Hotel")
 			fmt.Println("3. Makanan")
 			fmt.Println("4. Hiburan")
-			fmt.Print("Pilihan (1-4): ")
+			fmt.Println("5. Oleh-oleh")
+
+			fmt.Print("Pilihan (1-5): ")
 			fmt.Scanln(&pilihan)
 
-			if pilihan < 1 || pilihan > 4 {
+			if pilihan < 1 || pilihan > 5 {
 				fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
 			}
 		}
@@ -101,6 +106,8 @@ func tambahData() {
 			kat = "Makanan"
 		case 4:
 			kat = "Hiburan"
+		case 5:
+			kat = "Oleh-oleh"
 		}
 
 		fmt.Print("Masukkan jumlah pengeluaran: ")
@@ -150,11 +157,11 @@ func hapusData() {
 
 // Menampilkan seluruh pengeluaran yang telah ditambahkan
 func tampilkanData() {
-	if count == 0 {
+	if count == 1 {
 		fmt.Println("Belum ada data pengeluaran.")
 	} else {
 		fmt.Println("Daftar Pengeluaran:")
-		for i := 0; i < count; i++ {
+		for i := 1; i < count; i++ {
 			fmt.Printf("%d. %s - %.2f\n", i, data[i].kategori, data[i].jumlah)
 		}
 	}
