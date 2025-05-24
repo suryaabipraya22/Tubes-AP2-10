@@ -19,6 +19,9 @@ func main() {
 	var budget int
 	var pilihan int
 
+	// Isi data dummy (hapus/comment baris ini jika tidak ingin menggunakan dummy)
+	isiDataDummy(&data, &count)
+
 	fmt.Print("Masukkan total budget perjalanan Anda: ")
 	fmt.Scanln(&budget)
 
@@ -52,9 +55,18 @@ func main() {
 	}
 }
 
+func isiDataDummy(data *arrPengeluaran, count *int) {
+	data[0] = Pengeluaran{"Transportasi", 500000}
+	data[1] = Pengeluaran{"Akomodasi", 750000}
+	data[2] = Pengeluaran{"Makanan", 300000}
+	data[3] = Pengeluaran{"Hiburan", 200000}
+	data[4] = Pengeluaran{"Oleh-oleh", 150000}
+	*count = 5
+}
+
 func tampilkanMenu() {
 	fmt.Println("╔════════════════════════════════════════════════╗")
-	fmt.Println("║              MENU PENGELOLAAN BUDGET           ║")
+	fmt.Println("║         💸 MENU PENGELOLAAN BUDGET 💸          ║")
 	fmt.Println("╠════════════════════════════════════════════════╣")
 	fmt.Println("║ 1. Tambah Pengeluaran                          ║")
 	fmt.Println("║ 2. Ubah Pengeluaran                            ║")
@@ -116,7 +128,11 @@ func tambahData(data *arrPengeluaran, count *int) {
 
 func ubahData(data *arrPengeluaran, count int) {
 	var index int
-	fmt.Print("Masukkan indeks pengeluaran yang ingin diubah: ")
+	fmt.Println("Daftar Pengeluaran:")
+	for i := 0; i < count; i++ {
+		fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+	}
+	fmt.Print("Pilih pengeluaran yang ingin anda ubah(Berupa Angka): ")
 	fmt.Scanln(&index)
 
 	if index >= 0 && index < count {
@@ -159,6 +175,10 @@ func ubahData(data *arrPengeluaran, count int) {
 
 func hapusData(data *arrPengeluaran, count *int) {
 	var index int
+	fmt.Println("Daftar Pengeluaran:")
+	for i := 0; i < *count; i++ {
+		fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+	}
 	fmt.Print("Masukkan indeks pengeluaran yang ingin dihapus: ")
 	fmt.Scanln(&index)
 
@@ -192,7 +212,7 @@ func hitungTotalDanSaran(data arrPengeluaran, count int, budget int) {
 
 	fmt.Printf("Total pengeluaran: %d\n", total)
 	if total > budget {
-		fmt.Printf("Anda melebihi budget sebesar %d. Kurangi pengeluaran Anda!\n", total-budget)
+		fmt.Printf("Anda melebihi budget sebesar -%d. Kurangi pengeluaran Anda!\n", total-budget)
 	} else {
 		fmt.Printf("Masih ada sisa budget: %d. Anda cukup hemat!\n", budget-total)
 	}
@@ -200,7 +220,11 @@ func hitungTotalDanSaran(data arrPengeluaran, count int, budget int) {
 
 func cariDataKategori(data arrPengeluaran, count int) {
 	var kat string
-	fmt.Print("Masukkan kategori yang ingin dicari: ")
+	fmt.Println("Daftar Pengeluaran:")
+	for i := 0; i < count; i++ {
+		fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+	}
+	fmt.Print("Masukkan kategori yang ingin dicari(berupa huruf): ")
 	fmt.Scanln(&kat)
 	found := false
 
@@ -253,11 +277,15 @@ func urutkanData(data *arrPengeluaran, count int) {
 
 func tampilkanLaporan(data arrPengeluaran, count int, budget int) {
 	if count == 0 {
-		fmt.Println("Tidak ada data pengeluaran.")
+		fmt.Println("╔════════════════════════════════════╗")
+		fmt.Println("║     Tidak ada data pengeluaran.   ║")
+		fmt.Println("╚════════════════════════════════════╝")
 		return
 	}
 
-	fmt.Println("=== LAPORAN PENGELUARAN ===")
+	fmt.Println("╔════════════════════════════════════╗")
+	fmt.Println("║         LAPORAN PENGELUARAN        ║")
+	fmt.Println("╚════════════════════════════════════╝")
 	tampilkanData(data, count)
 
 	total := 0
@@ -269,7 +297,9 @@ func tampilkanLaporan(data arrPengeluaran, count int, budget int) {
 		selisih = -selisih
 	}
 
-	fmt.Printf("Total Pengeluaran: %d\n", total)
-	fmt.Printf("Budget: %d\n", budget)
-	fmt.Printf("Selisih Budget dan Pengeluaran: %d\n", selisih)
+	fmt.Println("╔════════════════════════════════════╗")
+	fmt.Printf("║ Total Pengeluaran : %-14d ║\n", total)
+	fmt.Printf("║ Budget            : %-14d ║\n", budget)
+	fmt.Printf("║ Selisih           : %-14d ║\n", selisih)
+	fmt.Println("╚════════════════════════════════════╝")
 }
