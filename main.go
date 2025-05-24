@@ -1,10 +1,8 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-const NMAX = 100
+const NMAX int = 100
 
 type Pengeluaran struct {
 	kategori string
