@@ -85,18 +85,22 @@ func tambahData(data *arrPengeluaran, count *int) {
 		var jml int
 		var kat string
 
+		fmt.Println("╔════════════════════════════════════╗")
+		fmt.Println("║       TAMBAH PENGELUARAN BARU      ║")
+		fmt.Println("╚════════════════════════════════════╝")
+
 		for pilihan < 1 || pilihan > 5 {
-			fmt.Println("Pilih kategori pengeluaran:")
+			fmt.Println(" Pilih kategori pengeluaran:")
 			fmt.Println("1. Transportasi")
 			fmt.Println("2. Hotel")
 			fmt.Println("3. Makanan")
 			fmt.Println("4. Hiburan")
 			fmt.Println("5. Oleh-oleh")
-			fmt.Print("Pilihan (1-5): ")
+			fmt.Print("📝 Pilihan (1-5): ")
 			fmt.Scanln(&pilihan)
 
 			if pilihan < 1 || pilihan > 5 {
-				fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
+				fmt.Println("❌ Pilihan tidak valid. Silakan coba lagi.")
 			}
 		}
 
@@ -113,30 +117,37 @@ func tambahData(data *arrPengeluaran, count *int) {
 			kat = "Oleh-oleh"
 		}
 
-		fmt.Print("Masukkan jumlah pengeluaran: ")
+		fmt.Print("💰 Masukkan jumlah pengeluaran: ")
 		fmt.Scanln(&jml)
 
 		data[*count] = Pengeluaran{kat, jml}
 		*count++
-		fmt.Println("Data berhasil ditambahkan.")
+		fmt.Println("✅ Data berhasil ditambahkan!")
 	} else {
-		fmt.Println("Data penuh. Tidak bisa menambah lagi.")
+		fmt.Println("⚠️ Data penuh. Tidak bisa menambah lagi.")
 	}
 }
 
 func ubahData(data *arrPengeluaran, count int) {
 	var index int
-	fmt.Println("Daftar Pengeluaran:")
+	fmt.Println("╔══════════════════════════════╗")
+	fmt.Println("║       Ubah Pengeluaran       ║")
+	fmt.Println("╚══════════════════════════════╝")
+	fmt.Println("Daftar Pengeluaran Saat Ini:")
+	fmt.Println("──────────────────────────────")
 	for i := 0; i < count; i++ {
-		fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+		fmt.Printf("│ %d. %-13s - Rp %d\n", i, data[i].kategori, data[i].jumlah)
 	}
-	fmt.Print("Pilih pengeluaran yang ingin anda ubah(Berupa Angka): ")
+	fmt.Println("──────────────────────────────")
+	fmt.Print("Pilih nomor pengeluaran yang ingin diubah: ")
 	fmt.Scanln(&index)
 
 	if index >= 0 && index < count {
 		var pilihan int
 		for pilihan < 1 || pilihan > 5 {
-			fmt.Println("Pilih kategori baru:")
+			fmt.Println("╔══════════════════════════════╗")
+			fmt.Println("║      Pilih Kategori Baru     ║")
+			fmt.Println("╚══════════════════════════════╝")
 			fmt.Println("1. Transportasi")
 			fmt.Println("2. Hotel")
 			fmt.Println("3. Makanan")
@@ -146,7 +157,7 @@ func ubahData(data *arrPengeluaran, count int) {
 			fmt.Scanln(&pilihan)
 
 			if pilihan < 1 || pilihan > 5 {
-				fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
+				fmt.Println("⚠️  Pilihan tidak valid. Silakan coba lagi.")
 			}
 		}
 
@@ -163,21 +174,27 @@ func ubahData(data *arrPengeluaran, count int) {
 			data[index].kategori = "Oleh-oleh"
 		}
 
-		fmt.Print("Masukkan jumlah baru: ")
+		fmt.Print("💰 Masukkan jumlah baru: ")
 		fmt.Scanln(&data[index].jumlah)
-		fmt.Println("Data berhasil diubah.")
+
+		fmt.Println("✅ Data berhasil diubah.")
 	} else {
-		fmt.Println("Indeks tidak valid.")
+		fmt.Println("❌ Indeks tidak valid.")
 	}
 }
 
 func hapusData(data *arrPengeluaran, count *int) {
 	var index int
-	fmt.Println("Daftar Pengeluaran:")
+	fmt.Println("╔══════════════════════════════╗")
+	fmt.Println("║       Hapus Pengeluaran      ║")
+	fmt.Println("╚══════════════════════════════╝")
+	fmt.Println("Daftar Pengeluaran Saat Ini:")
+	fmt.Println("──────────────────────────────")
 	for i := 0; i < *count; i++ {
-		fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+		fmt.Printf("│ %d. %-13s - Rp %d\n", i, data[i].kategori, data[i].jumlah)
 	}
-	fmt.Print("Masukkan indeks pengeluaran yang ingin dihapus: ")
+	fmt.Println("──────────────────────────────")
+	fmt.Print("Masukkan nomor pengeluaran yang ingin dihapus: ")
 	fmt.Scanln(&index)
 
 	if index >= 0 && index < *count {
@@ -185,20 +202,23 @@ func hapusData(data *arrPengeluaran, count *int) {
 			data[i] = data[i+1]
 		}
 		*count--
-		fmt.Println("Data berhasil dihapus.")
+		fmt.Println("✅ Data berhasil dihapus.")
 	} else {
-		fmt.Println("Indeks tidak valid.")
+		fmt.Println("❌ Indeks tidak valid.")
 	}
 }
 
 func tampilkanData(data arrPengeluaran, count int) {
 	if count == 0 {
-		fmt.Println("Belum ada data pengeluaran.")
+		fmt.Println("⚠️  Belum ada data pengeluaran.")
 	} else {
-		fmt.Println("Daftar Pengeluaran:")
+		fmt.Println("╔══════════════════════════════╗")
+		fmt.Println("║       Daftar Pengeluaran     ║")
+		fmt.Println("╚══════════════════════════════╝")
 		for i := 0; i < count; i++ {
-			fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+			fmt.Printf("│ %d. %-12s - Rp %d\n", i, data[i].kategori, data[i].jumlah)
 		}
+		fmt.Println("──────────────────────────────")
 	}
 }
 
