@@ -55,7 +55,7 @@ func main() {
 
 func isiDataDummy(data *arrPengeluaran, count *int) {
 	data[0] = Pengeluaran{"Transportasi", 500000}
-	data[1] = Pengeluaran{"Akomodasi", 750000}
+	data[1] = Pengeluaran{"Hotel", 750000}
 	data[2] = Pengeluaran{"Makanan", 300000}
 	data[3] = Pengeluaran{"Hiburan", 200000}
 	data[4] = Pengeluaran{"Oleh-oleh", 150000}
@@ -104,7 +104,7 @@ func tambahData(data *arrPengeluaran, count *int) {
 		case 1:
 			kat = "Transportasi"
 		case 2:
-			kat = "Akomodasi"
+			kat = "Hotel"
 		case 3:
 			kat = "Makanan"
 		case 4:
@@ -154,7 +154,7 @@ func ubahData(data *arrPengeluaran, count int) {
 		case 1:
 			data[index].kategori = "Transportasi"
 		case 2:
-			data[index].kategori = "Akomodasi"
+			data[index].kategori = "Hotel"
 		case 3:
 			data[index].kategori = "Makanan"
 		case 4:
@@ -218,11 +218,13 @@ func hitungTotalDanSaran(data arrPengeluaran, count int, budget int) {
 
 func cariDataKategori(data arrPengeluaran, count int) {
 	var kat string
-	fmt.Println("Daftar Pengeluaran:")
-	for i := 0; i < count; i++ {
-		fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
-	}
-	fmt.Print("Masukkan kategori yang ingin dicari(berupa huruf): ")
+	fmt.Println("Daftar Kategori: ")
+	fmt.Println("1. Transportasi")
+	fmt.Println("2. Hotel")
+	fmt.Println("3. Makanan")
+	fmt.Println("4. Hiburan")
+	fmt.Println("5. Oleh-oleh")
+	fmt.Print("Masukkan kategori yang ingin dicari: ")
 	fmt.Scanln(&kat)
 	found := false
 
@@ -234,7 +236,7 @@ func cariDataKategori(data arrPengeluaran, count int) {
 	}
 
 	if !found {
-		fmt.Println("Data tidak ditemukan.")
+		fmt.Println("Data tidak ditemukan❗❗")
 	}
 }
 
@@ -247,17 +249,49 @@ func urutkanData(data *arrPengeluaran, count int) {
 	fmt.Scanln(&pilihan)
 
 	if pilihan == 1 {
-		for i := 0; i < count-1; i++ {
-			min := i
-			for j := i + 1; j < count; j++ {
-				if data[j].jumlah < data[min].jumlah {
-					min = j
+		var arah int
+		fmt.Println("Urutkan berdasarkan jumlah:")
+		fmt.Println("1. Dari terkecil ke terbesar")
+		fmt.Println("2. Dari terbesar ke terkecil")
+		fmt.Print("Pilihan: ")
+		fmt.Scanln(&arah)
+
+		if arah == 1 {
+			// Selection Sort ascending (jumlah terkecil ke terbesar)
+			for i := 0; i < count-1; i++ {
+				min := i
+				for j := i + 1; j < count; j++ {
+					if data[j].jumlah < data[min].jumlah {
+						min = j
+					}
 				}
+				data[i], data[min] = data[min], data[i]
 			}
-			data[i], data[min] = data[min], data[i]
+			fmt.Println("Data diurutkan berdasarkan jumlah (Terkecil ke Terbesar):")
+		} else if arah == 2 {
+			// Selection Sort descending (jumlah terbesar ke terkecil)
+			for i := 0; i < count-1; i++ {
+				max := i
+				for j := i + 1; j < count; j++ {
+					if data[j].jumlah > data[max].jumlah {
+						max = j
+					}
+				}
+				data[i], data[max] = data[max], data[i]
+			}
+			fmt.Println("Data diurutkan berdasarkan jumlah (Terbesar ke Terkecil):")
+		} else {
+			fmt.Println("Pilihan arah pengurutan tidak valid.")
+			return
 		}
-		fmt.Println("Data diurutkan berdasarkan jumlah (Selection Sort).")
+
+		// Tampilkan hasil
+		for i := 0; i < count; i++ {
+			fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+		}
+
 	} else if pilihan == 2 {
+		// Insertion Sort berdasarkan kategori (string A-Z)
 		for i := 1; i < count; i++ {
 			temp := data[i]
 			j := i - 1
@@ -267,7 +301,10 @@ func urutkanData(data *arrPengeluaran, count int) {
 			}
 			data[j+1] = temp
 		}
-		fmt.Println("Data diurutkan berdasarkan kategori (Insertion Sort).")
+		fmt.Println("Data diurutkan berdasarkan kategori (A-Z):")
+		for i := 0; i < count; i++ {
+			fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+		}
 	} else {
 		fmt.Println("Pilihan tidak valid.")
 	}
@@ -291,13 +328,16 @@ func tampilkanLaporan(data arrPengeluaran, count int, budget int) {
 		total += data[i].jumlah
 	}
 	selisih := total - budget
-	if selisih < 0 {
-		selisih = -selisih
-	}
 
 	fmt.Println("╔════════════════════════════════════╗")
 	fmt.Printf("║ Total Pengeluaran : %-14d ║\n", total)
 	fmt.Printf("║ Budget            : %-14d ║\n", budget)
-	fmt.Printf("║ Selisih           : %-14d ║\n", selisih)
+
+	// Menampilkan minus jika total pengeluaran melebihi budget
+	if selisih < 0 {
+		fmt.Printf("║ Selisih           : %-14d ║\n", -selisih) // untuk menampilkan plus
+	} else {
+		fmt.Printf("║ Selisih           : -%-13d ║\n", selisih) // untuk menampilkan minus
+	}
 	fmt.Println("╚════════════════════════════════════╝")
 }
