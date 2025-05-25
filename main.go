@@ -45,8 +45,15 @@ func main() {
 		case 8:
 			tampilkanLaporan(data, count, budget)
 		case 9:
-			fmt.Println("Terima kasih telah menggunakan aplikasi kami!")
+			fmt.Println("╔═══════════════════════════════════════╗")
+			fmt.Println("║     TERIMA KASIH TELAH MENGGUNAKAN    ║")
+			fmt.Println("║       APLIKASI PENGELOLA BUDGET!      ║")
+			fmt.Println("╠═══════════════════════════════════════╣")
+			fmt.Println("║        Semoga perjalanan Anda         ║")
+			fmt.Println("║        menyenangkan dan hemat! 🌍💰   ║")
+			fmt.Println("╚═══════════════════════════════════════╝")
 			return
+
 		default:
 			fmt.Println("Pilihan tidak valid.")
 		}
@@ -228,56 +235,66 @@ func hitungTotalDanSaran(data arrPengeluaran, count int, budget int) {
 		total += data[i].jumlah
 	}
 
-	fmt.Printf("Total pengeluaran: %d\n", total)
+	fmt.Println("╔══════════════════════════════════════════════╗")
+	fmt.Printf("║ 💰 Total pengeluaran: Rp %d\n", total)
 	if total > budget {
-		fmt.Printf("Anda melebihi budget sebesar -%d. Kurangi pengeluaran Anda!\n", total-budget)
+		fmt.Printf("║ ⚠️  Anda melebihi budget sebesar: Rp -%d\n", total-budget)
+		fmt.Println("║ 🚨 Kurangi pengeluaran Anda!")
 	} else {
-		fmt.Printf("Masih ada sisa budget: %d. Anda cukup hemat!\n", budget-total)
+		fmt.Printf("║ ✅ Masih ada sisa budget: Rp %d\n", budget-total)
+		fmt.Println("║ 🎉 Anda cukup hemat!")
 	}
+	fmt.Println("╚══════════════════════════════════════════════╝")
 }
 
 func cariDataKategori(data arrPengeluaran, count int) {
 	var kat string
-	fmt.Println("Daftar Kategori: ")
-	fmt.Println("1. Transportasi")
-	fmt.Println("2. Hotel")
-	fmt.Println("3. Makanan")
-	fmt.Println("4. Hiburan")
-	fmt.Println("5. Oleh-oleh")
-	fmt.Print("Masukkan kategori yang ingin dicari: ")
+	fmt.Println("╔════════════════════════════════════════╗")
+	fmt.Println("║ 📂 Daftar Kategori:                    ║")
+	fmt.Println("║ 1. Transportasi                        ║")
+	fmt.Println("║ 2. Hotel                               ║")
+	fmt.Println("║ 3. Makanan                             ║")
+	fmt.Println("║ 4. Hiburan                             ║")
+	fmt.Println("║ 5. Oleh-oleh                           ║")
+	fmt.Println("╚════════════════════════════════════════╝")
+	fmt.Print("Masukkan nama kategori yang ingin dicari (Contoh: Makanan): ")
 	fmt.Scanln(&kat)
-	found := false
 
+	found := false
+	fmt.Println("📋 Hasil Pencarian:")
 	for i := 0; i < count; i++ {
 		if data[i].kategori == kat {
-			fmt.Printf("Ditemukan di indeks %d: %s - %d\n", i, data[i].kategori, data[i].jumlah)
+			fmt.Printf("✅ Ditemukan di indeks %d: %s - Rp %d\n", i, data[i].kategori, data[i].jumlah)
 			found = true
 		}
 	}
 
 	if !found {
-		fmt.Println("Data tidak ditemukan❗❗")
+		fmt.Println("❌ Data tidak ditemukan!")
 	}
 }
 
 func urutkanData(data *arrPengeluaran, count int) {
 	var pilihan int
-	fmt.Println("Pilih metode pengurutan:")
-	fmt.Println("1. Selection Sort berdasarkan jumlah")
-	fmt.Println("2. Insertion Sort berdasarkan kategori")
-	fmt.Print("Pilihan: ")
+	fmt.Println("╔════════════════════════════════════════╗")
+	fmt.Println("║       📊 PILIH METODE PENGURUTAN       ║")
+	fmt.Println("╚════════════════════════════════════════╝")
+	fmt.Println("  1. Selection Sort berdasarkan jumlah   ")
+	fmt.Println("  2. Insertion Sort berdasarkan kategori ")
+	fmt.Print("Masukkan pilihan Anda (1-2): ")
 	fmt.Scanln(&pilihan)
 
 	if pilihan == 1 {
 		var arah int
-		fmt.Println("Urutkan berdasarkan jumlah:")
-		fmt.Println("1. Dari terkecil ke terbesar")
-		fmt.Println("2. Dari terbesar ke terkecil")
-		fmt.Print("Pilihan: ")
+		fmt.Println("╔════════════════════════════════════╗")
+		fmt.Println("║       URUT BERDASARKAN JUMLAH      ║")
+		fmt.Println("╚════════════════════════════════════╝")
+		fmt.Println("  1. Dari terkecil ke terbesar     ")
+		fmt.Println("  2. Dari terbesar ke terkecil     ")
+		fmt.Print("Masukkan pilihan arah (1-2): ")
 		fmt.Scanln(&arah)
 
 		if arah == 1 {
-			// Selection Sort ascending (jumlah terkecil ke terbesar)
 			for i := 0; i < count-1; i++ {
 				min := i
 				for j := i + 1; j < count; j++ {
@@ -285,11 +302,12 @@ func urutkanData(data *arrPengeluaran, count int) {
 						min = j
 					}
 				}
-				data[i], data[min] = data[min], data[i]
+				temp := data[i]
+				data[i] = data[min]
+				data[min] = temp
 			}
-			fmt.Println("Data diurutkan berdasarkan jumlah (Terkecil ke Terbesar):")
+			fmt.Println("\n✅ Data telah diurutkan berdasarkan jumlah (Terkecil ke Terbesar):")
 		} else if arah == 2 {
-			// Selection Sort descending (jumlah terbesar ke terkecil)
 			for i := 0; i < count-1; i++ {
 				max := i
 				for j := i + 1; j < count; j++ {
@@ -297,21 +315,24 @@ func urutkanData(data *arrPengeluaran, count int) {
 						max = j
 					}
 				}
-				data[i], data[max] = data[max], data[i]
+				temp := data[i]
+				data[i] = data[max]
+				data[max] = temp
 			}
-			fmt.Println("Data diurutkan berdasarkan jumlah (Terbesar ke Terkecil):")
+			fmt.Println("\n✅ Data telah diurutkan berdasarkan jumlah (Terbesar ke Terkecil):")
 		} else {
-			fmt.Println("Pilihan arah pengurutan tidak valid.")
+			fmt.Println("❗ Pilihan arah pengurutan tidak valid.")
 			return
 		}
 
-		// Tampilkan hasil
+		fmt.Println("╔════════════════════════════════════╗")
+		fmt.Println("║         📋 HASIL PENGURUTAN        ║")
+		fmt.Println("╚════════════════════════════════════╝")
 		for i := 0; i < count; i++ {
-			fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+			fmt.Printf(" %d. %-12s - %d\n", i, data[i].kategori, data[i].jumlah)
 		}
 
 	} else if pilihan == 2 {
-		// Insertion Sort berdasarkan kategori (string A-Z)
 		for i := 1; i < count; i++ {
 			temp := data[i]
 			j := i - 1
@@ -321,19 +342,22 @@ func urutkanData(data *arrPengeluaran, count int) {
 			}
 			data[j+1] = temp
 		}
-		fmt.Println("Data diurutkan berdasarkan kategori (A-Z):")
+		fmt.Println("\n✅ Data telah diurutkan berdasarkan kategori (A-Z):")
+		fmt.Println("╔════════════════════════════════════╗")
+		fmt.Println("║         📋 HASIL PENGURUTAN        ║")
+		fmt.Println("╚════════════════════════════════════╝")
 		for i := 0; i < count; i++ {
-			fmt.Printf("%d. %s - %d\n", i, data[i].kategori, data[i].jumlah)
+			fmt.Printf(" %d. %-12s - %d\n", i, data[i].kategori, data[i].jumlah)
 		}
 	} else {
-		fmt.Println("Pilihan tidak valid.")
+		fmt.Println("❗ Pilihan tidak valid.")
 	}
 }
 
 func tampilkanLaporan(data arrPengeluaran, count int, budget int) {
 	if count == 0 {
 		fmt.Println("╔════════════════════════════════════╗")
-		fmt.Println("║     Tidak ada data pengeluaran.   ║")
+		fmt.Println("║     Tidak ada data pengeluaran.    ║")
 		fmt.Println("╚════════════════════════════════════╝")
 		return
 	}
